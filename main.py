@@ -196,15 +196,15 @@ while True:
 
 async def main():
 
-me = await client.get_me()
+    me = await client.get_me()
 
-print(
-    f"Logged in as: {me.first_name}"
-)
+    print(
+        f"Logged in as: {me.first_name}"
+    )
 
-await scheduler()
+    await scheduler()
 
 with client:
-client.loop.run_until_complete(
-main()
-)
+    client.loop.run_until_complete(
+        main()
+    )
