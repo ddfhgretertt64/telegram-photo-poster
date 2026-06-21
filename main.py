@@ -118,7 +118,8 @@ def save_state(group_index, photo_index):
 
 async def scheduler():
 
-    state = load_state()
+state = load_state()
+
 group_index = state["group_index"]
 photo_index = state["photo_index"]
 
@@ -169,12 +170,10 @@ while True:
 
         print(e)
 
-    # Next Group
     group_index = (
         group_index + 1
     ) % len(GROUPS)
 
-    # Next Photo
     photo_index = (
         photo_index + 1
     ) % len(PHOTOS)
