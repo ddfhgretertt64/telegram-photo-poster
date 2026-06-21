@@ -86,18 +86,17 @@ API_HASH
 # =========================
 
 def load_state():
-if os.path.exists(STATE_FILE):
-try:
-with open(STATE_FILE, "r") as f:
-return json.load(f)
-except:
-pass
+    if os.path.exists(STATE_FILE):
+        try:
+            with open(STATE_FILE, "r") as f:
+                return json.load(f)
+        except:
+            pass
 
-```
-return {
-    "group_index": 0,
-    "photo_index": 0
-}
+    return {
+        "group_index": 0,
+        "photo_index": 0
+    }
 ```
 
 # =========================
