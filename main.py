@@ -7,9 +7,7 @@ from telethon.sessions import StringSession
 from telethon.errors import FloodWaitError
 
 # =========================
-
 # Railway Variables
-
 # =========================
 
 API_ID = int(os.getenv("API_ID"))
@@ -17,56 +15,42 @@ API_HASH = os.getenv("API_HASH")
 SESSION = os.getenv("SESSION")
 
 # =========================
-
 # Groups
-
 # =========================
 
 GROUPS = [
-"Trusted_Buy_Sell_BD",
-"rs_buy_sell_grp",
-"JS_buy_sell",
-"pagebuysel",
-"tradebanglazone4",
-"buysellbyAliBhai",
-"bdfbbuysell",
+    "Trusted_Buy_Sell_BD",
+    "rs_buy_sell_grp",
+    "JS_buy_sell",
+    "pagebuysel",
+    "tradebanglazone4",
+    "buysellbyAliBhai",
+    "bdfbbuysell",
 ]
 
 # =========================
-
 # Captions
-
-# Same index = same group
-
 # =========================
 
 CAPTIONS = [
-"পেজটি বিক্রয় করা হবে। আগ্রহীরা ইনবক্স করুন, দাম খুবই কম।",
-"কম দামে ভালো একটি পেজ বিক্রি করা হবে। বিস্তারিত ইনবক্সে।",
-"জরুরি ভিত্তিতে পেজ সেল। আগ্রহীরা দ্রুত ইনবক্স করুন।",
-"পেজ কিনতে চাইলে ইনবক্স করুন। বাজেট-ফ্রেন্ডলি প্রাইস।",
+    "পেজটি বিক্রয় করা হবে। আগ্রহীরা ইনবক্স করুন, দাম খুবই কম।",
+    "কম দামে ভালো একটি পেজ বিক্রি করা হবে। বিস্তারিত ইনবক্সে।",
+    "জরুরি ভিত্তিতে পেজ সেল। আগ্রহীরা দ্রুত ইনবক্স করুন।",
+    "পেজ কিনতে চাইলে ইনবক্স করুন। বাজেট-ফ্রেন্ডলি প্রাইস।",
 ]
 
 # =========================
-
 # Photos
-
-# Add as many as you want
-
 # =========================
 
 PHOTOS = [
-"photos/photo1.jpg",
-"photos/photo2.jpg",
-"photos/photo3.jpg",
+    "photos/photo1.jpg",
+    "photos/photo2.jpg",
+    "photos/photo3.jpg",
 ]
 
 # =========================
-
 # Delay
-
-# 20 minutes
-
 # =========================
 
 POST_DELAY = 20 * 60
@@ -74,15 +58,13 @@ POST_DELAY = 20 * 60
 STATE_FILE = "state.json"
 
 client = TelegramClient(
-StringSession(SESSION),
-API_ID,
-API_HASH
+    StringSession(SESSION),
+    API_ID,
+    API_HASH
 )
 
 # =========================
-
 # Load State
-
 # =========================
 
 def load_state():
@@ -90,7 +72,7 @@ def load_state():
         try:
             with open(STATE_FILE, "r") as f:
                 return json.load(f)
-        except:
+        except Exception:
             pass
 
     return {
@@ -99,98 +81,96 @@ def load_state():
     }
 
 # =========================
-
 # Save State
-
 # =========================
 
 def save_state(group_index, photo_index):
     with open(STATE_FILE, "w") as f:
-        json.dump({
-            "group_index": group_index,
-            "photo_index": photo_index
-        }, f)
+        json.dump(
+            {
+                "group_index": group_index,
+                "photo_index": photo_index
+            },
+            f
+        )
+
 # =========================
-
 # Scheduler
-
 # =========================
 
 async def scheduler():
 
-state = load_state()
+    state = load_state()
 
-group_index = state["group_index"]
-photo_index = state["photo_index"]
+    group_index = state["group_index"]
+    photo_index = state["photo_index"]
 
-while True:
+    while True:
 
-    group = GROUPS[group_index]
+        group = GROUPS[group_index]
 
-    caption = CAPTIONS[
-        group_index % len(CAPTIONS)
-    ]
+        caption = CAPTIONS[
+            group_index % len(CAPTIONS)
+        ]
 
-    photo = PHOTOS[
-        photo_index % len(PHOTOS)
-    ]
+        photo = PHOTOS[
+            photo_index % len(PHOTOS)
+        ]
 
-    try:
+        try:
 
-        if not os.path.exists(photo):
-            print(f"Photo not found: {photo}")
+            if not os.path.exists(photo):
+                print(f"Photo not found: {photo}")
 
-        else:
+            else:
 
-            await client.send_file(
-                group,
-                photo,
-                caption=caption
-            )
+                await client.send_file(
+                    group,
+                    photo,
+                    caption=caption
+                )
+
+                print(
+                    f"SUCCESS | {group} | {photo}"
+                )
+
+        except FloodWaitError as e:
 
             print(
-                f"SUCCESS | {group} | {photo}"
+                f"FloodWait {e.seconds}s"
             )
 
-    except FloodWaitError as e:
+            await asyncio.sleep(
+                e.seconds
+            )
 
-        print(
-            f"FloodWait {e.seconds}s"
+        except Exception as e:
+
+            print(
+                f"FAILED | {group}"
+            )
+
+            print(e)
+
+        group_index = (
+            group_index + 1
+        ) % len(GROUPS)
+
+        photo_index = (
+            photo_index + 1
+        ) % len(PHOTOS)
+
+        save_state(
+            group_index,
+            photo_index
         )
 
         await asyncio.sleep(
-            e.seconds
+            POST_DELAY
         )
-
-    except Exception as e:
-
-        print(
-            f"FAILED | {group}"
-        )
-
-        print(e)
-
-    group_index = (
-        group_index + 1
-    ) % len(GROUPS)
-
-    photo_index = (
-        photo_index + 1
-    ) % len(PHOTOS)
-
-    save_state(
-        group_index,
-        photo_index
-    )
-
-    await asyncio.sleep(
-        POST_DELAY
-    )
 
 # =========================
-
 # Main
-
 # =========================
 
 async def main():
