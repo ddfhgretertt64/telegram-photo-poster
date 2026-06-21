@@ -97,7 +97,6 @@ def load_state():
         "group_index": 0,
         "photo_index": 0
     }
-```
 
 # =========================
 
