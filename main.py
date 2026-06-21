@@ -118,8 +118,7 @@ def save_state(group_index, photo_index):
 
 async def scheduler():
 
-state = load_state()
-
+    state = load_state()
 group_index = state["group_index"]
 photo_index = state["photo_index"]
 
