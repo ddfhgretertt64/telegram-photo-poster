@@ -105,12 +105,11 @@ def load_state():
 # =========================
 
 def save_state(group_index, photo_index):
-with open(STATE_FILE, "w") as f:
-json.dump({
-"group_index": group_index,
-"photo_index": photo_index
-}, f)
-
+    with open(STATE_FILE, "w") as f:
+        json.dump({
+            "group_index": group_index,
+            "photo_index": photo_index
+        }, f)
 # =========================
 
 # Scheduler
