@@ -118,7 +118,6 @@ def save_state(group_index, photo_index):
 
 async def scheduler():
 
-```
 state = load_state()
 
 group_index = state["group_index"]
@@ -189,7 +188,6 @@ while True:
     await asyncio.sleep(
         POST_DELAY
     )
-```
 
 # =========================
 
@@ -199,7 +197,6 @@ while True:
 
 async def main():
 
-```
 me = await client.get_me()
 
 print(
@@ -207,7 +204,6 @@ print(
 )
 
 await scheduler()
-```
 
 with client:
 client.loop.run_until_complete(
