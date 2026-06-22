@@ -24,7 +24,7 @@ GROUPS = [
     "JS_buy_sell",
     "pagebuysel",
     "tradebanglazone4",
-    "buysellbyAliBhai",
+    "freeadsincomes",
     "bdfbbuysell",
 ]
 
